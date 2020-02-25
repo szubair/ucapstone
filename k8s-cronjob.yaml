@@ -1,0 +1,19 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: list-zones
+spec:
+  #### run this container at 10 pm on weekdays
+  schedule: "0 22 * * 1-5" 
+  startingDeadlineSeconds: 10
+  concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: 0
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: gcp-zones
+            image: sabeerz/gcproj6:latest
+            command: [ "python3","/app/list_myzone.py","mygcp_projid" ]
+          restartPolicy: Never
